@@ -1,0 +1,57 @@
+---
+Profiles:
+
+    OrdererGenesis:
+        Orderer:
+            <<: *OrdererDefaults
+            Organizations:
+                - *OrdererOrg
+        Consortiums:
+            SampleConsortium:
+                Organizations:
+                    - *mailbox1
+                    - *mailbox2
+    Channel:
+        Consortium: SampleConsortium
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *mailbox1
+                - *mailbox2
+
+
+
+Organizations:
+  - &OrdererOrg
+    Name: OrdererOrg
+    ID: OrdererMSP
+    MSPDir: crypto-config/ordererOrganizations/network.com/msp
+  - &mailbox1
+    Name: mailbox1MSP
+    ID: mailbox1MSP
+    MSPDir: crypto-config/peerOrganizations/mailbox1.network.com/msp
+    AnchorPeers:
+      - Host: peer0.mailbox1.network.com
+        Port: 7051
+  - &mailbox2
+    Name: mailbox2MSP
+    ID: mailbox2MSP
+    MSPDir: crypto-config/peerOrganizations/mailbox2.network.com/msp
+    AnchorPeers:
+      - Host: peer0.mailbox2.network.com
+        Port: 7051
+
+Orderer: &OrdererDefaults
+  OrdererType: solo
+  Addresses:
+    - orderer1.network.com:7050
+    - orderer2.network.com:7050
+  BatchTimeout: 2s
+  BatchSize:
+    MaxMessageCount: 10
+    AbsoluteMaxBytes: 99 MB
+    PreferredMaxBytes: 512 KB
+  Organizations:
+
+Application: &ApplicationDefaults
+  Organizations:

@@ -1,0 +1,28 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+# Modified by Muhammad Salah <muhammad.salah@eg.ibm.com>
+# Blockchain Weekends Program: Lab 1 "Blockchain Network Design"
+#
+OrdererOrgs:
+  - Name: Orderer
+    Domain: network.com
+    Specs:
+      - Hostname: orderer1
+      - Hostname: orderer2
+
+PeerOrgs:
+  - Name: mailbox1
+    Domain: mailbox1.network.com
+    Template:
+      Count: 2
+    Users:
+      Count: 5
+
+  - Name: mailbox2
+    Domain: mailbox2.network.com
+    Template:
+      Count: 2
+    Users:
+      Count: 5

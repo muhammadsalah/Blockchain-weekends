@@ -1,0 +1,24 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+# Modified by Muhammad Salah <muhammad.salah@eg.ibm.com>
+# Blockchain Weekends Program: Lab 1 "Blockchain Network Design"
+#
+version: '2' # We use this for versioning docker compose file. 
+services:
+  orderer-base:
+    image: hyperledger/fabric-orderer:x86_64-1.0.3 # We use our stable version for our purpose of demonstration.
+    environment:
+      - ORDERER_GENERAL_LOGLEVEL=debug #Debug level for development
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0 #Listen to all network.
+      - ORDERER_GENERAL_GENESISMETHOD=file #There are many ways to transplant the genesis block, but we will stick with file at the moment. (Starting slow)
+      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block #Genises block file location
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp #Member Service Provider certs location
+      # enabled TLS
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    command: orderer
