@@ -10,7 +10,7 @@
 version: '2' # We use this for versioning docker compose file. 
 services:
   peer-base:
-    image: hyperledger/fabric-peer:x86_64-1.0.3 # We added to tag a specific version of peers, we use fabric 1.0.3.
+    image: hyperledger/fabric-peer # We added to tag a specific version of peers, we use fabric 1.0.3.
     environment:
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock 
       # the following setting starts chaincode containers on the same
@@ -29,4 +29,4 @@ services:
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: peer node start
   couchdb-base:
-    image: hyperledger/fabric-couchdb:X86_64-1.0.3 # We provide the couchdb base, we could do that in a separate file, but it felt to be more logical associated with the Peer base.
+    image: hyperledger/fabric-couchdb # We provide the couchdb base, we could do that in a separate file, but it felt to be more logical associated with the Peer base.

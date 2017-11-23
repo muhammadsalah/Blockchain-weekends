@@ -17,14 +17,10 @@ CONTAINER_IDS=$(docker ps -aq)
     docker rm -f $CONTAINER_IDS
 fi
 
+docker network prune -f
 
-COMPOSE_PROJECT_NAME=Blkchnwknd # Setting the compose project name for network name
+export COMPOSE_PROJECT_NAME=blockchainweeekends
 
 docker-compose -f ../network.yaml up -d >& ../log.txt # starting the composer project with our sample network, and trailling logs in log file.
 
-# Wait for docker containers to initialize
-sleep 10
-
-# List running containers
-echo "---- Running Containers -----"
-docker ps -a
+docker logs -f cli

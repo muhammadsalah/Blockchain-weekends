@@ -1,0 +1,28 @@
+Creating network "blockchainweeekends_network" with the default driver
+Creating couchdbpeer1mailbox2 ... 
+Creating mailbox1-ca.network.com ... 
+Creating mailbox2-ca.network.com ... 
+Creating couchdbpeer0mailbox1 ... 
+Creating orderer1.network.com ... 
+Creating couchdbpeer1mailbox2
+Creating orderer2.network.com ... 
+Creating couchdbpeer1mailbox1 ... 
+Creating mailbox1-ca.network.com
+Creating mailbox2-ca.network.com
+Creating couchdbpeer0mailbox1
+Creating couchdbpeer0mailbox2 ... 
+Creating couchdbpeer1mailbox1
+Creating orderer1.network.com
+Creating orderer2.network.com
+Creating couchdbpeer0mailbox2
+[1A[2KCreating couchdbpeer1mailbox2 ... [32mdone[0m[1BCreating peer1.mailbox2.network.com ... 
+Creating peer1.mailbox2.network.com
+[1A[2KCreating mailbox2-ca.network.com ... [32mdone[0m[1B[1A[2KCreating mailbox1-ca.network.com ... [32mdone[0m[1B[1A[2KCreating couchdbpeer0mailbox1 ... [32mdone[0m[1BCreating peer0.mailbox1.network.com ... 
+Creating peer0.mailbox1.network.com
+[1A[2KCreating couchdbpeer1mailbox1 ... [32mdone[0m[1BCreating peer1.mailbox1.network.com ... 
+Creating peer1.mailbox1.network.com
+[1A[2KCreating orderer1.network.com ... [32mdone[0m[1B[1A[2KCreating orderer2.network.com ... [32mdone[0m[1B[1A[2KCreating peer1.mailbox2.network.com ... [32mdone[0m[1B[1A[2KCreating couchdbpeer0mailbox2 ... [32mdone[0m[1BCreating peer0.mailbox2.network.com ... 
+Creating peer0.mailbox2.network.com
+[1A[2KCreating peer1.mailbox1.network.com ... [32mdone[0m[1B[1A[2KCreating peer0.mailbox1.network.com ... [32mdone[0m[1B[1A[2KCreating peer0.mailbox2.network.com ... [32mdone[0m[1BCreating cli ... 
+Creating cli
+[1A[2KCreating cli ... [32mdone[0m[1B
