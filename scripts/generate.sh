@@ -20,8 +20,9 @@ mkdir channel-artifacts
 
 
 
-FABRIC_CFG_PATH=$PWD configtxgen -profile OrdererGenesis -outputBlock ./../channel-artifacts/genesis.block
-FABRIC_CFG_PATH=$PWD configtxgen -profile Channel -outputAnchorPeersUpdate ./../channel-artifacts/mailbox1MSPanchors.tx -channelID channel -asOrg mailbox1MSP
-FABRIC_CFG_PATH=$PWD configtxgen -profile Channel -outputAnchorPeersUpdate ./../channel-artifacts/mailbox2MSPanchors.tx -channelID channel -asOrg mailbox2MSP
+FABRIC_CFG_PATH=$PWD configtxgen -profile OrdererGenesis -outputBlock ./channel-artifacts/genesis.block
+FABRIC_CFG_PATH=$PWD configtxgen -profile Channel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID channel
+FABRIC_CFG_PATH=$PWD configtxgen -profile Channel -outputAnchorPeersUpdate ./channel-artifacts/mailbox1MSPanchors.tx -channelID channel -asOrg mailbox1MSP
+FABRIC_CFG_PATH=$PWD configtxgen -profile Channel -outputAnchorPeersUpdate ./channel-artifacts/mailbox2MSPanchors.tx -channelID channel -asOrg mailbox2MSP
 
 cd ./scripts
