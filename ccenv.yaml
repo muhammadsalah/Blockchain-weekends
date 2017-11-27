@@ -1,0 +1,10 @@
+version: '2'
+services:
+ cli:
+      container_name: fabric-chaincode-dev
+      image: hyperledger/fabric-ccenv
+      tty: true
+      command: /bin/bash
+      volumes:
+          - ./chaincode/:/opt/gopath/src/github.com/chaincode
+          

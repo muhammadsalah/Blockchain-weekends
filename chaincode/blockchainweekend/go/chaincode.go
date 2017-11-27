@@ -8,7 +8,11 @@
 //
 //
 
-package main
+// Simple Application that stores an Invoker ID Cert alongside to a passed Key value.
+// You can query the value to return that creator value.
+
+
+package main 
 
 import (
 	"fmt"
@@ -16,49 +20,54 @@ import (
 	pb "github.com/hyperledger/fabric/protos/peer"
 )
 
-type chaincode struct {
-
+type SimpleChaincode struct{
 }
 
-func (t *chaincode) Init(stub shim.ChaincodeStubInterface) pb.Response{
-	fmt.Println("Blockchainweekends Chaincode in GO Init")
+func (c *SimpleChaincode) Init (stub shim.ChaincodeStubInterface) pb.Response{
+	fmt.Println("Blockchainweekend Sample chaincode is in INIT")
 	return shim.Success(nil)
 }
 
-func (t *chaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response{
-	
-	fmt.Printf("Blockchainweekends Chaincode in GO Invoke")
+func (c *SimpleChaincode) Invoke (stub shim.ChaincodeStubInterface) pb.Response{
+	fmt.Println("Blockchainweeekend Sample chaincode is INVOKED")
 	function, args := stub.GetFunctionAndParameters()
-	if function == "set"{
-		return t.set(stub,args)
+	switch function {
+	case "enroll":
+		Result:=c.enroll(stub,args)
+		return Result
+	case "get":
+		Result:=c.get(stub,args)
+		return Result
 	}
-	if function == "get"{
-		return t.get(stub,args)
-	}
-	fmt.Println("Bad chaincode functionality")
-	return shim.Error("BAD")
+	return shim.Error("Invalid invocation method")
 }
 
-func (t *chaincode) set(stub shim.ChaincodeStubInterface,args[] string) pb.Response{
-	var USER string
-	var STATE string
-	USER = args[0]
-	STATE = args [1]
-	fmt.Printf("Chaincode Set is active with USER" + USER + " and STATE" + STATE + " as parameters.")
-	stub.PutState(USER,[]byte(STATE))
+
+func (c *SimpleChaincode) get (stub shim.ChaincodeStubInterface, args []string) pb.Response{
+	fmt.Println("Blockchainweeekend Sample chaincode function get")
+	key := args[0]
+	creatorasbytes, _ := stub.GetState(key)
+	creatorstring := fmt.Sprintf("%s",creatorasbytes)
+	fmt.Println("Key: "+key)
+	fmt.Println("Creator: ")
+	fmt.Println(creatorstring)
+	return shim.Success([]byte(creatorstring))
+}
+
+func (c *SimpleChaincode) enroll (stub shim.ChaincodeStubInterface,args []string) pb.Response{
+	fmt.Println("Blockchainweekend Sample chaincode function enroll")
+	key := args[0]
+	creatorasbytes, _ := stub.GetCreator()
+	creatorstring := fmt.Sprintf("%s",creatorasbytes)
+	fmt.Println("Key: "+key)
+	fmt.Println("Creator: ")
+	fmt.Println(creatorstring)
+	stub.PutState(key,[]byte(creatorstring))
 	return shim.Success(nil)
 }
 
-func (t *chaincode) get(stub shim.ChaincodeStubInterface,args[]string) pb.Response{
-	var USER string
-	USER = args[0]
-	fmt.Printf("Chaincode Get is active with USER" + USER + "as a parameter.")
-	STATE , _ := stub.GetState(USER)
-	return shim.Success(STATE)
-}
-
-func main(){
-	err := shim.Start(new(chaincode))
+func main() {
+	err := shim.Start(new(SimpleChaincode))
 	if err != nil {
 		fmt.Printf("Error starting Simple chaincode: %s", err)
 	}
