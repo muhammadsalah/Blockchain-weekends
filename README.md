@@ -6,10 +6,4 @@
 ##              2- Shared Ledgers, through the concept of Channels.                                     ##
 ##              3- Smart Contracts, installed, and instantiated on these channels.                      ##
 ##              4- Scalling Dynamically, adding more Organizations to the network.                      ##
-##########################################################################################################
-##                                                                                                      ##    
-##                                                                                                      ##    
-##         --Xxx--          Under Construction                      --Xxx--                             ##
-##                                                                                                      ##            
-##                                                                                                      ##
-##########################################################################################################
+
