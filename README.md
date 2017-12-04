@@ -89,34 +89,57 @@ and same applies for the 2nd peer from the other organization
 	peer channel update -o orderer1.network.com:7050 -c channel -f ./channel-artifacts/mailbox2MSPanchors.tx --tls true --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/network.com/orderers/orderer1.network.com/msp/tlscacerts/tlsca.network.com-cert.pem
 
 Please visit the “cli_init.sh” to have a better grasp, and careful that the peer is preconfigured to act on behalf of the first anchor peer.
-Deploying Sample Chaincode
+
+
+##						Deploying Sample Chaincode													##
 First we make sure that our identity is set to PEER 0 in Org mailbox 1
-export CORE_PEER_ADDRESS=peer0.mailbox1.network.com:7051
-export CORE_PEER_LOCALMSPID=mailbox1MSP
-export CORE_PEER_TLS_ENABLED=true
-export CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox1.network.com/peers/peer0.mailbox1.network.com/tls/server.crt
-export CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox1.network.com/peers/peer0.mailbox1.network.com/tls/server.key
-export CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox1.network.com/peers/peer0.mailbox1.network.com/tls/ca.crt
-export CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox1.network.com/users/Admin@mailbox1.network.com/msp
+
+	export CORE_PEER_ADDRESS=peer0.mailbox1.network.com:7051
+
+	export CORE_PEER_LOCALMSPID=mailbox1MSP
+
+	export CORE_PEER_TLS_ENABLED=true
+
+	export CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox1.network.com/peers/peer0.mailbox1.network.com/tls/server.crt
+
+	export CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox1.network.com/peers/peer0.mailbox1.network.com/tls/server.key
+	
+	export CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox1.network.com/peers/peer0.mailbox1.network.com/tls/ca.crt
+
+	export CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox1.network.com/users/Admin@mailbox1.network.com/msp
 
 Then we install the chaincode:
-peer chaincode install -n mycc -v 1.0 -p github.com/chaincode/chaincode_example02/go
+
+	peer chaincode install -n mycc -v 1.0 -p github.com/chaincode/chaincode_example02/go
 
 and we do same thing for peer 0 in org Mailbox 2
-export CORE_PEER_ADDRESS=peer0.mailbox2.network.com:7051
-export CORE_PEER_LOCALMSPID=mailbox2MSP
-export CORE_PEER_TLS_ENABLED=true
-export CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox2.network.com/peers/peer0.mailbox2.network.com/tls/server.crt
-export CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox2.network.com/peers/peer0.mailbox2.network.com/tls/server.key
-export CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox2.network.com/peers/peer0.mailbox2.network.com/tls/ca.crt
-export CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox2.network.com/users/Admin@mailbox2.network.com/msp
-peer chaincode install -n mycc -v 1.0 -p github.com/chaincode/chaincode_example02/go
+	
+	export CORE_PEER_ADDRESS=peer0.mailbox2.network.com:7051
+
+	export CORE_PEER_LOCALMSPID=mailbox2MSP
+
+	export CORE_PEER_TLS_ENABLED=true
+
+	export CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox2.network.com/peers/peer0.mailbox2.network.com/tls/server.crt
+
+	export CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox2.network.com/peers/peer0.mailbox2.network.com/tls/server.key
+
+	export CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox2.network.com/peers/peer0.mailbox2.network.com/tls/ca.crt
+
+	export CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox2.network.com/users/Admin@mailbox2.network.com/msp
+
+	peer chaincode install -n mycc -v 1.0 -p github.com/chaincode/chaincode_example02/go
+
 Then we can instantiate the chaincode once on any peer; sepecify our endorsement policy
-peer chaincode instantiate -o orderer1.network.com:7050 --tls true --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/network.com/orderers/orderer1.network.com/msp/tlscacerts/tlsca.network.com-cert.pem -C channel -n mycc -v 1.0 -c '{"Args":["init"]}' -P "OR ('mailbox1MSP.member','mailbox2MSP.member')"
+
+	peer chaincode instantiate -o orderer1.network.com:7050 --tls true --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/network.com/orderers/orderer1.network.com/msp/tlscacerts/tlsca.network.com-cert.pem -C channel -n mycc -v 1.0 -c '{"Args":["init"]}' -P "OR ('mailbox1MSP.member','mailbox2MSP.member')"
+
 and we could invoke the chaincode
-peer chaincode invoke -o orderer1.network.com:7050  --tls true --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/network.com/orderers/orderer1.network.com/msp/tlscacerts/tlsca.network.com-cert.pem  -C channel -n mycc -c '{"Args":["invoke","somekey"]}'
+
+	peer chaincode invoke -o orderer1.network.com:7050  --tls true --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/network.com/orderers/orderer1.network.com/msp/tlscacerts/tlsca.network.com-cert.pem  -C channel -n mycc -c '{"Args":["invoke","somekey"]}'
 
 
 and we can query our chaincode to see the reflection of our code
-peer chaincode query -C channel -n mycc -c '{"Args":["query","somekey"]}'
+
+	peer chaincode query -C channel -n mycc -c '{"Args":["query","somekey"]}'
 
