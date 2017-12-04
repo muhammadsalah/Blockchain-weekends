@@ -183,15 +183,109 @@ Now we need to define the transaction yaml file, in order to set MSP details for
 We create a new file named "neworgtx.yaml"
 
 	Organizations:
-    - &mailbox3
-        Name: mailbox3MSP
-        ID: mailbox3MSP
-        MSPDir: crypto-new/peerOrganizations/mailbox3.network.com/msp
+		- &mailbox3
+			Name: mailbox3MSP
+			ID: mailbox3MSP
+			MSPDir: crypto-new/peerOrganizations/mailbox3.network.com/msp
 
-        AnchorPeers:
-            - Host: peer0.mailbox3.network.com
-              Port: 7051
+			AnchorPeers:
+				- Host: peer0.mailbox3.network.com
+				Port: 7051
 
+Now we are ready to start writing our dockerfile yaml file, so we now create a new file again "neworg.yaml"
+
+	version: '2'
+	networks:
+		network:
+	services:
+	mailbox3-ca:
+		container_name: mailbox3-ca.network.com
+		image: hyperledger/fabric-ca 
+		environment:
+			- FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+			- FABRIC_CA_SERVER_TLS_ENABLED=true
+			- FABRIC_CA_SERVER_CA_NAME=mailbox-ca3
+			- FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.mailbox3.network.com-cert.pem
+			- FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/CA3_PRIVATE_KEY
+		ports:
+			- "9054:7054"
+		command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.mailbox3.network.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/CA3_PRIVATE_KEY -b admin:adminpw -d'
+		volumes:
+			- ./crypto-new/peerOrganizations/mailbox3.network.com/ca/:/etc/hyperledger/fabric-ca-server-config
+		networks:
+			- network
+	couchdbpeer0mailbox3:
+		container_name: couchdbpeer0mailbox3
+		image: hyperledger/fabric-couchdb
+		environment:
+			- COUCHDB_USER=
+			- COUCHDB_PASSWORD=
+		ports:
+			- "9984:5984"
+		networks:
+			- network
+	peer0.mailbox3.network.com:
+		container_name: peer0.mailbox3.network.com
+		extends:
+			file:  base/peer-base.yaml
+			service: peer-base
+		environment:
+			- CORE_PEER_ID=peer0.mailbox3.network.com
+			- CORE_PEER_ADDRESS=peer0.mailbox3.network.com:7051
+			- CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.mailbox3.network.com:7051
+			- CORE_PEER_LOCALMSPID=mailbox3MSP
+			- CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+			- CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdbpeer0mailbox3:5984
+			- CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+			- CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+		depends_on:
+			- couchdbpeer0mailbox3
+		volumes:
+			- /var/run/:/host/var/run/
+			- ./crypto-new/peerOrganizations/mailbox3.network.com/peers/peer0.mailbox3.network.com/msp:/etc/hyperledger/fabric/msp
+			- ./crypto-new/peerOrganizations/mailbox3.network.com/peers/peer0.mailbox3.network.com/tls:/etc/hyperledger/fabric/tls
+		ports:
+			- 11051:7051
+			- 11053:7053
+		networks:
+			- network
+	couchdbpeer1mailbox3:
+		container_name: couchdbpeer1mailbox3
+		image: hyperledger/fabric-couchdb
+		environment:
+			- COUCHDB_USER=
+			- COUCHDB_PASSWORD=
+		ports:
+			- "10984:5984"
+		networks:
+			- network
+	peer1.mailbox3.network.com:
+		container_name: peer1.mailbox3.network.com
+		extends:
+			file:  base/peer-base.yaml
+			service: peer-base
+		environment:
+			- CORE_PEER_ID=peer1.mailbox3.network.com
+			- CORE_PEER_ADDRESS=peer1.mailbox3.network.com:7051
+			- CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.mailbox3.network.com:7051
+			- CORE_PEER_LOCALMSPID=mailbox3MSP
+			- CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+			- CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdbpeer1mailbox3:5984
+			- CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+			- CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+		depends_on:
+			- couchdbpeer1mailbox3
+		volumes:
+			- /var/run/:/host/var/run/
+			- ./crypto-new/peerOrganizations/mailbox1.network.com/peers/peer1.mailbox3.network.com/msp:/etc/hyperledger/fabric/msp
+			- ./crypto-new/peerOrganizations/mailbox1.network.com/peers/peer1.mailbox3.network.com/tls:/etc/hyperledger/fabric/tls
+		ports:
+			- 12051:7051
+			- 12053:7053
+		networks:
+			- network
+
+Now, we can up this docker file later, when we export the crypto material, and create the required transaction.
 
 
 We have to leverage some new tools inside of our CLI dev container; hence we start running updates for the mirrors through aptitude; and install a JSON parser, and optionally a text editor of our choice; nano is good for kickstarters.
@@ -210,7 +304,7 @@ we can export the URL for our tool for simplicity
 
 Now, we fetch the most recent configuration block from the network
 
-	peer channel fetch config config_block.pb -o orderer1.network.com:7050 -c channel --tls--cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/network.com/orderers/orderer1.network.com/msp/tlscacerts/tlsca.network.com-cert.pem
+	peer channel fetch config config_block.pb -o orderer1.network.com:7050 -c channel --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/network.com/orderers/orderer1.network.com/msp/tlscacerts/tlsca.network.com-cert.pem
 
 Now we leverage our configtxlator rest server to decode the binaries for us and parse into JSON with JQ parser.
 
