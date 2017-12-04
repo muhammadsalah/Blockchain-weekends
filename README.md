@@ -8,10 +8,10 @@
 ##              4- Scalling Dynamically, adding more Organizations to the network.                      ##
 
 ##							Source Code																	##
-	The source code is available publicly on GitHub.
 Please clone the following repository in order to continue with the lab.
 Via Git, you can issue the following in your terminal in your exercise directory (of your own choice)
-git clone https://github.com/muhammadsalah/Blockchain-weekends.git
+
+	#git clone https://github.com/muhammadsalah/Blockchain-weekends.git
 
 
 ##Pulling Fabric Version 1.0.4
