@@ -14,7 +14,7 @@ Ivan Vankov,
 Nick Gaski,
 Jae Duk Seo,
 Joshua Rippon,
-Jeff Garatt.
+Jeff Garratt.
 
 ##							Source Code																	##
 Please clone the following repository in order to continue with the lab.
