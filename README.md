@@ -21,12 +21,12 @@
 ##This script will make sure you have the correct version; and you can set the version inside the script variable.
 
 
-##Set up the environment
-	This part most of us might have done many times, through creating the crypto material, and generating the artifacts part.
+##Set up the environment##
+##	This part most of us might have done many times, through creating the crypto material, and generating the artifacts part.
 There is not much to be walked through here on this stage, as it has been covered earlier in an early stage of blockchain lab, however, you can follow the same trail as in “generate.sh” shell script, under the script folder.
 
 However, notice that your binaries “cryptogen”, and “configtxgen” should be accessible via your environment directly, in other words they have to be appended to the path.
-
+##
 
 ##Running the environment
 	The “start_env.sh” script, is a simple script that simply kills all the running docker containers, and clears all docker networks that are not used; if you choose to use this script to initialize the environment; it will tail the logs in a text file “log.txt”.
