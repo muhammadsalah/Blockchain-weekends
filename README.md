@@ -167,6 +167,18 @@ Please, notice that this sample chaincode just simply stores the invoking CA ide
 Before hand, we have to define our new organization, so we need to create our new crytpo config file for our new organization from scratch.
 We need to create a new file named "neworg.yaml".
 
+Fill the new yaml file with the following params
+
+	PeerOrgs:
+  		- Name: mailbox3
+    	Domain: mailbox3.network.com
+    	Template:
+     		Count: 2
+    	Users:
+    		Count: 5
+
+just as the other organizations, a 3rd replica exactly.
+
 
 
 We have to leverage some new tools inside of our CLI dev container; hence we start running updates for the mirrors through aptitude; and install a JSON parser, and optionally a text editor of our choice; nano is good for kickstarters.
