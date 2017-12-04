@@ -18,7 +18,10 @@ Via Git, you can issue the following in your terminal in your exercise directory
 The source code was built on the duration between version 1.0.3 – 1.0.4, both of any those versions should work fine as they have been tested.
 Please navigate to the scripts folder, and run the “pull_fabric.sh” script.
 	./pull_fabric.sh
+
 This script will make sure you have the correct version; and you can set the version inside the script variable.
+
+
 
 
 ##							Set up the environment														##
