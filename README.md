@@ -77,12 +77,28 @@ CORE_PEER_MSPCONFIGPATH====> Configuration folder which contains standard folder
 
 Once, “peer” binary has access to all these stuff, you can create channels instantiate deploy chaincodes, and act on behalf of the peer; and we will leverage that later to add a third organization to our current network.
 However the CLI does those two operations on behalf of the two anchor peers, that has been configured previously in the generate of artifacts sections.
+We dive into our CLI container
+	docker exec -ti cli bash
 
 	peer channel join -b channel.block
 
 	peer channel update -o orderer1.network.com:7050 -c channel -f ./channel-artifacts/mailbox1MSPanchors.tx --tls true --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/network.com/orderers/orderer1.network.com/msp/tlscacerts/tlsca.network.com-cert.pem
 
-and same applies for the 2nd peer from the other organization
+and same applies for the 2nd peer from the other organization but we need to switch identity so we do these simple exports, since the container was preconfigured for peer0 on mailbox1.
+
+	export CORE_PEER_ADDRESS=peer0.mailbox2.network.com:7051
+
+	export CORE_PEER_LOCALMSPID=mailbox2MSP
+
+	export CORE_PEER_TLS_ENABLED=true
+
+	export CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox2.network.com/peers/peer0.mailbox2.network.com/tls/server.crt
+
+	export CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox2.network.com/peers/peer0.mailbox2.network.com/tls/server.key
+
+	export CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox2.network.com/peers/peer0.mailbox2.network.com/tls/ca.crt
+
+	export CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox2.network.com/users/Admin@mailbox2.network.com/msp
 
 	peer channel join -b channel.block
 
@@ -142,4 +158,47 @@ and we could invoke the chaincode
 and we can query our chaincode to see the reflection of our code
 
 	peer chaincode query -C channel -n mycc -c '{"Args":["query","somekey"]}'
+
+Please, notice that this sample chaincode just simply stores the invoking CA identity referenced to that key, and that's to demonstrate the GetCreator() function of the shim interface.
+
+
+## 						Adding an Organization to Our Current Setup									##
+
+Before hand, we have to define our new organization, so we need to create our new crytpo config file for our new organization from scratch.
+We need to create a new file named "neworg.yaml".
+
+
+
+We have to leverage some new tools inside of our CLI dev container; hence we start running updates for the mirrors through aptitude; and install a JSON parser, and optionally a text editor of our choice; nano is good for kickstarters.
+
+We run the following command
+
+	apt update && apt install jq nano
+
+Now we start the configtxlator tool inside the CLI container.
+
+	configtxlator start &
+
+we can export the URL for our tool for simplicity
+
+	export CONFIGTXLATOR_URL=http://127.0.0.1:7059
+
+Now, we fetch the most recent configuration block from the network
+
+	peer channel fetch config config_block.pb -o orderer1.network.com:7050 -c channel --tls--cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/network.com/orderers/orderer1.network.com/msp/tlscacerts/tlsca.network.com-cert.pem
+
+Now we leverage our configtxlator rest server to decode the binaries for us and parse into JSON with JQ parser.
+
+	curl -X POST --data-binary @config_block.pb "$CONFIGTXLATOR_URL/protolator/decode/common.Block" | jq . > config_block.json
+
+Now we inspect the block
+
+	nano config_block.json
+
+Please notice the structure of the JSON object, and you will find all the current network configuration we built in our yaml files.
+We simply need to detach the configuration section only, so we can put our magic on it.
+
+	jq .data.data[0].payload.data.config config_block.json > config.json
+
+
 
