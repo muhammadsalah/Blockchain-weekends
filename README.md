@@ -11,34 +11,34 @@
 Please clone the following repository in order to continue with the lab.
 Via Git, you can issue the following in your terminal in your exercise directory (of your own choice)
 
-	#git clone https://github.com/muhammadsalah/Blockchain-weekends.git
+	git clone https://github.com/muhammadsalah/Blockchain-weekends.git
 
 
-##Pulling Fabric Version 1.0.4
-##	The source code was built on the duration between version 1.0.3 – 1.0.4, both of any those versions should work fine as they have been tested.
-##Please navigate to the scripts folder, and run the “pull_fabric.sh” script.
-##./pull_fabric.sh
-##This script will make sure you have the correct version; and you can set the version inside the script variable.
+##							Pulling Fabric Version 1.0.4												##
+The source code was built on the duration between version 1.0.3 – 1.0.4, both of any those versions should work fine as they have been tested.
+Please navigate to the scripts folder, and run the “pull_fabric.sh” script.
+	./pull_fabric.sh
+This script will make sure you have the correct version; and you can set the version inside the script variable.
 
 
-##Set up the environment
+##							Set up the environment														##
 This part most of us might have done many times, through creating the crypto material, and generating the artifacts part.
 There is not much to be walked through here on this stage, as it has been covered earlier in an early stage of blockchain lab, however, you can follow the same trail as in “generate.sh” shell script, under the script folder.
 
 However, notice that your binaries “cryptogen”, and “configtxgen” should be accessible via your environment directly, in other words they have to be appended to the path.
-##
 
-##Running the environment
+
+##							Running the environment														##
 	The “start_env.sh” script, is a simple script that simply kills all the running docker containers, and clears all docker networks that are not used; if you choose to use this script to initialize the environment; it will tail the logs in a text file “log.txt”.
 
-##Please make sure you inspect the script, and ask a question whenever any command is not clear.
-##Also, all scripts are plain simple for demonstration purposes so make sure you understand them clearly.
-##Another, alternative is making sure the environment variable is set
-##COMPOSE_PROJECT_NAME=blockchainweeekends
-##This can be achieved whether you can export that in the terminal
-##export COMPOSE_PROJECT_NAME=blockchainweeekends
-##or create a .env file with the sole attribute
-##COMPOSE_PROJECT_NAME=blockchainweeekends
+Please make sure you inspect the script, and ask a question whenever any command is not clear.
+Also, all scripts are plain simple for demonstration purposes so make sure you understand them clearly.
+Another, alternative is making sure the environment variable is set
+	COMPOSE_PROJECT_NAME=blockchainweeekends
+This can be achieved whether you can export that in the terminal
+	export COMPOSE_PROJECT_NAME=blockchainweeekends
+or create a .env file with the sole attribute
+	COMPOSE_PROJECT_NAME=blockchainweeekends
 
 ##Then run the command that consumes the “network.yaml” file via docker-compose.
 ##Docker-compose is a tool that consumes yaml configuration files, and start executing them in a manner to create ready made containers, a very common practice is you initialize your container ##parameterized in yaml configuration file, and each container is pointing to one, ore more shell scripts that start executing to make sure everything is up and running; which is the case with ##our CLI container, that sets up our environment pulling the channel transactions, and connecting the the anchor peers; to get ready to deploy our first chaincode through it; and opt for ##testing it out.
