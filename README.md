@@ -15,7 +15,7 @@ Via Git, you can issue the following in your terminal in your exercise directory
 
 
 ##							Pulling Fabric Version 1.1-preview												##
-The source code was built on the duration between version 1.1-preview, both of any those versions should work fine as they have been tested.
+The source code was built on the duration between version 1.1-preview.
 Please navigate to the scripts folder, and run the “pull_fabric.sh” script.
 
 	./pull_fabric.sh
