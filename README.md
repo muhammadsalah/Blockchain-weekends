@@ -62,11 +62,17 @@ One binary, that we are very interested is: Peer
 The binary is configured through parametrization in environment variables, most of these variable are self explanatory by nature however, lets take a look at them.
 
 CORE_PEER_ADDRESS ===> Maps to the peer url.
+
 CORE_PEER_LOCALMSPID=====> The MSPID used in signing, and identification.
+
 CORE_PEER_TLS_ENABLED====> Boolean for TLS. 
+
 CORE_PEER_TLS_CERT_FILE=====> Maps for the TLS Certification File.
+
 CORE_PEER_TLS_KEY_FILE======> Maps for the private key used to sign transactions.
+
 CORE_PEER_TLS_ROOTCERT_FILE====> Root certificate for TLS.
+
 CORE_PEER_MSPCONFIGPATH====> Configuration folder which contains standard folder structure that all the certs, and keys that allows dealing of this peer with the MSP.
 
 Once, “peer” binary has access to all these stuff, you can create channels instantiate deploy chaincodes, and act on behalf of the peer; and we will leverage that later to add a third organization to our current network.
