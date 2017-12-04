@@ -32,7 +32,7 @@ However, notice that your binaries “cryptogen”, and “configtxgen” should
 
 
 ##							Running the environment														##
-	The “start_env.sh” script, is a simple script that simply kills all the running docker containers, and clears all docker networks that are not used; if you choose to use this script to initialize the environment; it will tail the logs in a text file “log.txt”.
+The “start_env.sh” script, is a simple script that simply kills all the running docker containers, and clears all docker networks that are not used; if you choose to use this script to initialize the environment; it will tail the logs in a text file “log.txt”.
 
 Please make sure you inspect the script, and ask a question whenever any command is not clear.
 Also, all scripts are plain simple for demonstration purposes so make sure you understand them clearly.
