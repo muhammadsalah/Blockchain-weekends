@@ -462,6 +462,10 @@ In order to join the channel, we need the channel first block
 
 	peer channel join -b mychannel.block
 
+Verify your accomplishment through
+
+	peer channel list
+
 Now, the organization has joined the channel successfuly, we can reset the steps to restart the chaincode; or deploy chaincode on the 3 organizations.
 Or do whatever we simply want.
 
