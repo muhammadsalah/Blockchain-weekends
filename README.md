@@ -9,20 +9,20 @@
 
 ##Source Code##
 	The source code is available publicly on GitHub.
-##Please clone the following repository in order to continue with the lab.
-##Via Git, you can issue the following in your terminal in your exercise directory (of your own choice)
-##git clone https://github.com/muhammadsalah/Blockchain-weekends.git
+Please clone the following repository in order to continue with the lab.
+Via Git, you can issue the following in your terminal in your exercise directory (of your own choice)
+git clone https://github.com/muhammadsalah/Blockchain-weekends.git
 
 
-##Pulling Fabric Version 1.0.4##
+##Pulling Fabric Version 1.0.4
 ##	The source code was built on the duration between version 1.0.3 – 1.0.4, both of any those versions should work fine as they have been tested.
 ##Please navigate to the scripts folder, and run the “pull_fabric.sh” script.
 ##./pull_fabric.sh
 ##This script will make sure you have the correct version; and you can set the version inside the script variable.
 
 
-##Set up the environment##
-##	This part most of us might have done many times, through creating the crypto material, and generating the artifacts part.
+##Set up the environment
+This part most of us might have done many times, through creating the crypto material, and generating the artifacts part.
 There is not much to be walked through here on this stage, as it has been covered earlier in an early stage of blockchain lab, however, you can follow the same trail as in “generate.sh” shell script, under the script folder.
 
 However, notice that your binaries “cryptogen”, and “configtxgen” should be accessible via your environment directly, in other words they have to be appended to the path.
