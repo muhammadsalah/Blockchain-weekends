@@ -165,7 +165,7 @@ Please, notice that this sample chaincode just simply stores the invoking CA ide
 ## 						Adding an Organization to Our Current Setup									##
 
 Before hand, we have to define our new organization, so we need to create our new crytpo config file for our new organization from scratch.
-We need to create a new file named "neworgcrypto.yaml".
+We need to create a new file named "neworgcrypto.yaml", all under a new folder namely "neworg".
 
 Fill the new yaml file with the following params
 
@@ -180,7 +180,7 @@ Fill the new yaml file with the following params
 just as the other organizations, a 3rd replica exactly.
 
 Now we need to define the transaction yaml file, in order to set MSP details for this new organization.
-We create a new file named "neworgtx.yaml"
+We create a new file named "configtx.yaml"
 
 	Organizations:
 		- &mailbox3
@@ -286,6 +286,17 @@ Now we are ready to start writing our dockerfile yaml file, so we now create a n
 			- network
 
 Now, we can up this docker file later, when we export the crypto material, and create the required transaction.
+
+Following the same path of generating the artifacts, we do the drill and we dump the material into the CLI shared space as well.
+
+	FABRIC_CFG_PATH=$PWD
+
+	configtxgen -printOrg mailbox3MSP > ../channel-artifacts/mailbox3MSP.json
+	
+	cp -r ../crypto-config/ordererOrganizations crypto-new
+
+
+notice we fetched the orderer certs into our crypto-new folder.
 
 
 We have to leverage some new tools inside of our CLI dev container; hence we start running updates for the mirrors through aptitude; and install a JSON parser, and optionally a text editor of our choice; nano is good for kickstarters.
