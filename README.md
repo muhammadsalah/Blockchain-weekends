@@ -165,7 +165,7 @@ Please, notice that this sample chaincode just simply stores the invoking CA ide
 ## 						Adding an Organization to Our Current Setup									##
 
 Before hand, we have to define our new organization, so we need to create our new crytpo config file for our new organization from scratch.
-We need to create a new file named "neworg.yaml".
+We need to create a new file named "neworgcrypto.yaml".
 
 Fill the new yaml file with the following params
 
@@ -178,6 +178,19 @@ Fill the new yaml file with the following params
     		Count: 5
 
 just as the other organizations, a 3rd replica exactly.
+
+Now we need to define the transaction yaml file, in order to set MSP details for this new organization.
+We create a new file named "neworgtx.yaml"
+
+	Organizations:
+    - &mailbox3
+        Name: mailbox3MSP
+        ID: mailbox3MSP
+        MSPDir: crypto-new/peerOrganizations/mailbox3.network.com/msp
+
+        AnchorPeers:
+            - Host: peer0.mailbox3.network.com
+              Port: 7051
 
 
 
