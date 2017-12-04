@@ -13,7 +13,7 @@ services:
 ###---        Orderer Instants Section          ---###
   orderer1.network.com:
     container_name: orderer1.network.com
-    image: hyperledger/fabric-orderer
+    image: hyperledger/fabric-orderer:x86_64-1.1.0-preview
     environment:
       - ORDERER_GENERAL_LOGLEVEL=debug
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
@@ -37,7 +37,7 @@ services:
       - network
   orderer2.network.com:
     container_name: orderer2.network.com
-    image: hyperledger/fabric-orderer
+    image: hyperledger/fabric-orderer:x86_64-1.1.0-preview
     environment:
       - ORDERER_GENERAL_LOGLEVEL=debug
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
@@ -62,7 +62,7 @@ services:
       ###---        Certificate Authorities Instants Section          ---###
   mailbox1-ca:
     container_name: mailbox1-ca.network.com
-    image: hyperledger/fabric-ca 
+    image: hyperledger/fabric-ca:x86_64-1.1.0-preview
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_TLS_ENABLED=true
@@ -78,9 +78,9 @@ services:
       - network
   mailbox2-ca:
     container_name: mailbox2-ca.network.com
-    image: hyperledger/fabric-ca 
+    image: hyperledger/fabric-ca:x86_64-1.1.0-preview
     environment:
-      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server:x86_64-1.1.0-preview
       - FABRIC_CA_SERVER_TLS_ENABLED=true
       - FABRIC_CA_SERVER_CA_NAME=mailbox-ca2
       - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.mailbox2.network.com-cert.pem
@@ -95,7 +95,7 @@ services:
       ###---        Peer0 in Mailbox1 Instants Section          ---###
   couchdbpeer0mailbox1:
     container_name: couchdbpeer0mailbox1
-    image: hyperledger/fabric-couchdb
+    image: hyperledger/fabric-couchdb:x86_64-1.1.0-preview
     environment:
       - COUCHDB_USER=
       - COUCHDB_PASSWORD=
@@ -131,7 +131,7 @@ services:
     ###---        Peer1 in Mailbox1 Instants Section          ---###
   couchdbpeer1mailbox1:
     container_name: couchdbpeer1mailbox1
-    image: hyperledger/fabric-couchdb
+    image: hyperledger/fabric-couchdb:x86_64-1.1.0-preview
     environment:
       - COUCHDB_USER=
       - COUCHDB_PASSWORD=
@@ -167,7 +167,7 @@ services:
       ###---        Peer0 in Mailbox2 Instants Section          ---###
   couchdbpeer0mailbox2:
     container_name: couchdbpeer0mailbox2
-    image: hyperledger/fabric-couchdb
+    image: hyperledger/fabric-couchdb:x86_64-1.1.0-preview
     environment:
       - COUCHDB_USER=
       - COUCHDB_PASSWORD=
@@ -203,7 +203,7 @@ services:
     ###---        Peer1 in Mailbox2 Instants Section          ---###
   couchdbpeer1mailbox2:
     container_name: couchdbpeer1mailbox2
-    image: hyperledger/fabric-couchdb
+    image: hyperledger/fabric-couchdb:x86_64-1.1.0-preview
     environment:
       - COUCHDB_USER=
       - COUCHDB_PASSWORD=
@@ -239,7 +239,7 @@ services:
 
   cli:
       container_name: cli
-      image: hyperledger/fabric-tools
+      image: hyperledger/fabric-tools:x86_64-1.1.0-preview
       tty: true
       environment:
         - GOPATH=/opt/gopath

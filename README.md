@@ -14,8 +14,8 @@ Via Git, you can issue the following in your terminal in your exercise directory
 	git clone https://github.com/muhammadsalah/Blockchain-weekends.git
 
 
-##							Pulling Fabric Version 1.0.4												##
-The source code was built on the duration between version 1.0.3 – 1.0.4, both of any those versions should work fine as they have been tested.
+##							Pulling Fabric Version 1.1-preview												##
+The source code was built on the duration between version 1.1-preview, both of any those versions should work fine as they have been tested.
 Please navigate to the scripts folder, and run the “pull_fabric.sh” script.
 
 	./pull_fabric.sh
@@ -200,7 +200,7 @@ Now we are ready to start writing our dockerfile yaml file, so we now create a n
 	services:
 	mailbox3-ca:
 		container_name: mailbox3-ca.network.com
-		image: hyperledger/fabric-ca 
+		image: hyperledger/fabric-ca:x86_64-1.1.0-preview
 		environment:
 			- FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
 			- FABRIC_CA_SERVER_TLS_ENABLED=true
@@ -216,7 +216,7 @@ Now we are ready to start writing our dockerfile yaml file, so we now create a n
 			- network
 	couchdbpeer0mailbox3:
 		container_name: couchdbpeer0mailbox3
-		image: hyperledger/fabric-couchdb
+		image: hyperledger/fabric-couchdb:x86_64-1.1.0-preview
 		environment:
 			- COUCHDB_USER=
 			- COUCHDB_PASSWORD=
@@ -251,7 +251,7 @@ Now we are ready to start writing our dockerfile yaml file, so we now create a n
 			- network
 	couchdbpeer1mailbox3:
 		container_name: couchdbpeer1mailbox3
-		image: hyperledger/fabric-couchdb
+		image: hyperledger/fabric-couchdb:x86_64-1.1.0-preview
 		environment:
 			- COUCHDB_USER=
 			- COUCHDB_PASSWORD=
@@ -282,6 +282,35 @@ Now we are ready to start writing our dockerfile yaml file, so we now create a n
 		ports:
 			- 12051:7051
 			- 12053:7053
+		networks:
+			- network
+	cli:
+		container_name: climailbox3
+		image: hyperledger/fabric-tools:x86_64-1.1.0-preview
+		tty: true
+		environment:
+			- GOPATH=/opt/gopath
+			- CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+			- CORE_LOGGING_LEVEL=DEBUG
+			- CORE_PEER_ID=cli
+			- CORE_PEER_ADDRESS=peer0.mailbox3.network.com:7051
+			- CORE_PEER_LOCALMSPID=mailbox3MSP
+			- CORE_PEER_TLS_ENABLED=true
+			- CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox3.network.com/peers/peer0.mailbox3.network.com/tls/server.crt
+			- CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox3.network.com/peers/peer0.mailbox3.network.com/tls/server.key
+			- CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox3.network.com/peers/peer0.mailbox3.network.com/tls/ca.crt
+			- CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox3.network.com/users/Admin@mailbox3.network.com/msp
+		working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+		command: /bin/bash -c 'sleep 10000000'
+		volumes:
+			- /var/run/:/host/var/run/
+			- ../chaincode/:/opt/gopath/src/github.com/chaincode
+			- ./crypto-new:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
+			- ../scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
+			- ../channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
+		depends_on:
+			- peer0.mailbox3.network.com
+			- peer1.mailbox3.network.com
 		networks:
 			- network
 
@@ -329,6 +358,106 @@ Please notice the structure of the JSON object, and you will find all the curren
 We simply need to detach the configuration section only, so we can put our magic on it.
 
 	jq .data.data[0].payload.data.config config_block.json > config.json
+
+We now want to append the mailbox3MSP json we generated earlier to this config json to create an updated config json.
+
+	jq -s '.[0] * {"channel_group":{"groups":{"Application":{"groups":{"mailbox3MSP":.[1]}}}}}' config.json ./channel-artifacts/mailbox3MSP.json >& updated_config.json
+
+Now we inspect the updated JSON object via nano
+	
+	nano updated_config.json
+
+Now we have the two configuration JSONs, but what we are interested in is the change; however Blockchain doesn't understand JSON, it speaks protobuffers; so we have encode both JSONS
+into protobuffers
+	
+	curl -X POST --data-binary @config.json "$CONFIGTXLATOR_URL/protolator/encode/common.Config" > config.pb
+
+	curl -X POST --data-binary @updated_config.json "$CONFIGTXLATOR_URL/protolator/encode/common.Config" > updated_config.pb
+
+This command now brings us the delta between the two JSONs
+
+	curl -X POST -F channel=channel -F "original=@config.pb" -F "updated=@updated_config.pb" "${CONFIGTXLATOR_URL}/configtxlator/compute/update-from-configs" > config_update.pb
+
+Now we have a config update protobuffer, a delta update that is ready to go through the network.
+However, we need to wrap it with some headers yet so, we will turn it back again into a JSON
+
+	curl -X POST --data-binary @config_update.pb "$CONFIGTXLATOR_URL/protolator/decode/common.ConfigUpdate" | jq . > config_update.json
+
+Now we have to wrap some headers
+
+	echo '{"payload":{"header":{"channel_header":{"channel_id":"channel","type":2}},"data":{"config_update":'$(cat config_update.json)'}}}' | jq . > config_update_in_envelope.json
+
+We encode this back again into protobuffer
+
+	curl -X POST --data-binary @config_update_in_envelope.json "$CONFIGTXLATOR_URL/protolator/encode/common.Envelope" > config_update_in_envelope.pb
+
+Now, we need to sign this with both organizations identities
+We make sure we have the first identity
+
+	export CORE_PEER_ADDRESS=peer0.mailbox1.network.com:7051
+
+	export CORE_PEER_LOCALMSPID=mailbox1MSP
+
+	export CORE_PEER_TLS_ENABLED=true
+
+	export CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox1.network.com/peers/peer0.mailbox1.network.com/tls/server.crt
+
+	export CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox1.network.com/peers/peer0.mailbox1.network.com/tls/server.key
+	
+	export CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox1.network.com/peers/peer0.mailbox1.network.com/tls/ca.crt
+
+	export CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox1.network.com/users/Admin@mailbox1.network.com/msp
+
+
+	peer channel signconfigtx -f config_update_in_envelope.pb
+
+Now we switch back to the second identity
+
+	export CORE_PEER_ADDRESS=peer0.mailbox2.network.com:7051
+
+	export CORE_PEER_LOCALMSPID=mailbox2MSP
+
+	export CORE_PEER_TLS_ENABLED=true
+
+	export CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox2.network.com/peers/peer0.mailbox2.network.com/tls/server.crt
+
+	export CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox2.network.com/peers/peer0.mailbox2.network.com/tls/server.key
+
+	export CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox2.network.com/peers/peer0.mailbox2.network.com/tls/ca.crt
+
+	export CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox2.network.com/users/Admin@mailbox2.network.com/msp
+
+However, here we won't need to sign, hence mailbox2 will sign it when we try to update.
+
+	peer channel update -f config_update_in_envelope.pb -o orderer1.network.com:7050 -c channel --tls true --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/network.com/orderers/orderer1.network.com/msp/tlscacerts/tlsca.network.com-cert.pem
+
+Now, we are ready to up the new containers, in a new terminal window
+
+	export COMPOSE_PROJECT_NAME=blockchainweeekends
+	
+	docker-compose -f neworg.yaml up
+
+Now, we move to our new CLI that is tied to mailbox3 peer0 In a new terminal window as well
+
+	docker exec -ti climailbox3 bash
+
+Now we try to join channel, and deploy chaincode as well.
+
+	export CHANNEL_NAME=channel
+	
+	export ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/network.com/orderers/orderer1.network.com/msp/tlscacerts/tlsca.network.com-cert.pem
+
+In order to join the channel, we need the channel first block
+
+	peer channel fetch 0 mychannel.block -o orderer1.network.com:7050 -c $CHANNEL_NAME --tls --cafile $ORDERER_CA
+
+	peer channel join -b mychannel.block
+
+Now, the organization has joined the channel successfuly, we can reset the steps to restart the chaincode; or deploy chaincode on the 3 organizations.
+Or do whatever we simply want.
+
+Congratulations on finishing the lab.
+
 
 
 

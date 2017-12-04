@@ -8,7 +8,7 @@
 version: '2' # We use this for versioning docker compose file. 
 services:
   orderer-base:
-    image: hyperledger/fabric-orderer # We use our stable version for our purpose of demonstration.
+    image: hyperledger/fabric-orderer:x86_64-1.1.0-preview # We use our stable version for our purpose of demonstration.
     environment:
       - ORDERER_GENERAL_LOGLEVEL=debug #Debug level for development
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0 #Listen to all network.
