@@ -35,6 +35,12 @@ Please navigate to the scripts folder, and run the “pull_fabric.sh” script.
 
 This script will make sure you have the correct version; and you can set the version inside the script variable.
 
+##							Hyperledger Fabric in brief															##
+Hyperledger fabric is a decentralized permissioned blockchain ledger, that is mainly targetted to the level of enterprise.
+Hyperledger, leverages the visible identity, and access controlled records via the new concept of channels.
+Channels, is the common maintaned ledger between two organizations or more. These channels are supported by Smart Contracts,
+which are programs that ensure the business logic is followed on top of this channel.
+
 ##							Case Scenario																##
 We are going to build a basic network that has the following components:
 
@@ -81,6 +87,8 @@ Fabric Binaries:
 
 
 ##							Running the environment														##
+Please notice that we are going to need 4 terminal windows in order to apply this Lab.
+
 The “start_env.sh” script, is a simple script that simply kills all the running docker containers, and clears all docker networks that are not used; if you choose to use this script to initialize the environment; it will tail the logs in a text file “log.txt”.
 
 Please make sure you inspect the script, and ask a question whenever any command is not clear.
@@ -103,6 +111,14 @@ Docker-compose is a tool that consumes yaml configuration files, and start execu
 However, we can go manual mode; and that is simply achieved via changing the “network.yaml” file, find the CLI container section, and opt for commenting the command line.
 This can be found at line 257. simply add “#” for comment before command.
 
+This is on terminal number 1.
+Now, run the environment via script from the scripts folder
+
+	./start_env.sh
+
+or alternatively issue the following command
+
+	docker-compose -f network.yaml up
 
 ##							Behind the scenes														##
 What we are about to leverage is; our CLI container -which is a tool that is meant for development process, can act on behalf of any peer/user (endpoint) as long as it has access to the right certificates, and it has all basic blockchain binaries inside of it; saving the hussle of configuring these binaries on your local machine.
@@ -125,6 +141,10 @@ CORE_PEER_MSPCONFIGPATH :: Configuration folder which contains standard folder s
 
 Once, “peer” binary has access to all these stuff, you can create channels instantiate deploy chaincodes, and act on behalf of the peer; and we will leverage that later to add a third organization to our current network.
 However the CLI does those two operations on behalf of the two anchor peers, that has been configured previously in the generate of artifacts sections.
+Notice, if you did not comment the command of the CLI container in network.yaml file, these steps are not unnecessary.
+You will only need to dive into the container using the first command only.
+
+From terminal 2
 We dive into our CLI container
 	docker exec -ti cli bash
 
@@ -153,9 +173,14 @@ and same applies for the 2nd peer from the other organization but we need to swi
 	peer channel update -o orderer1.network.com:7050 -c channel -f ./channel-artifacts/mailbox2MSPanchors.tx --tls true --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/network.com/orderers/orderer1.network.com/msp/tlscacerts/tlsca.network.com-cert.pem
 
 Please visit the “cli_init.sh” to have a better grasp, and careful that the peer is preconfigured to act on behalf of the first anchor peer.
-
+Notice, if you did not comment the command of the CLI container in network.yaml file, the above steps are not unnecessary.
 
 ##						Deploying Sample Chaincode													##
+We have a very trivial chaincode, that is mere purpose is to store the identity of the creator (invoker) against some key to be stored in the world state data base.
+It's rather trivial, and check it through chaincode folder.
+
+You are still using terminal 2 here, so don't panic.
+Issue these in the CLI dev container.
 First we make sure that our identity is set to PEER 0 in Org mailbox 1
 
 	export CORE_PEER_ADDRESS=peer0.mailbox1.network.com:7051
@@ -213,7 +238,7 @@ Please, notice that this sample chaincode just simply stores the invoking CA ide
 ## 						Adding an Organization to Our Current Setup									##
 
 Before hand, we have to define our new organization, so we need to create our new crytpo config file for our new organization from scratch.
-We need to create a new file named "neworgcrypto.yaml", all under a new folder namely "neworg".
+We need to create a new file named "neworgcrypto.yaml", all under the folder folder namely "neworg".
 
 Fill the new yaml file with the following params
 
@@ -372,11 +397,11 @@ Following the same path of generating the artifacts, we do the drill and we dump
 	
 	cp -r ../crypto-config/ordererOrganizations crypto-new
 
-
 notice we fetched the orderer certs into our crypto-new folder.
 
-
+This is done through your terminal 2 again:
 We have to leverage some new tools inside of our CLI dev container; hence we start running updates for the mirrors through aptitude; and install a JSON parser, and optionally a text editor of our choice; nano is good for kickstarters.
+
 
 We run the following command
 
@@ -479,13 +504,14 @@ However, here we won't need to sign, hence mailbox2 will sign it when we try to 
 
 	peer channel update -f config_update_in_envelope.pb -o orderer1.network.com:7050 -c channel --tls true --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/network.com/orderers/orderer1.network.com/msp/tlscacerts/tlsca.network.com-cert.pem
 
-Now, we are ready to up the new containers, in a new terminal window
+Now, we are ready to up the new containers.
+Throughout your terminal 3, issue the following command to up the new organization network.
 
 	export COMPOSE_PROJECT_NAME=blockchainweeekends
 	
 	docker-compose -f neworg.yaml up
 
-Now, we move to our new CLI that is tied to mailbox3 peer0 In a new terminal window as well
+Now, we move to our new CLI that is tied to mailbox3 peer0 In your terminal 4:
 
 	docker exec -ti climailbox3 bash
 
