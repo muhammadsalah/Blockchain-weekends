@@ -34,15 +34,15 @@ This script will make sure you have the correct version; and you can set the ver
 ##							Case Scenario																##
 We are going to build a basic network that has the following components:
 
-		1- Two orderer services in the blockchain network. 
+1- Two orderer services in the blockchain network. 
 
-		2- Two organizations namely "mailbox1", and "mailbox2". 
+2- Two organizations namely "mailbox1", and "mailbox2". 
 
-		3- Each organization has two peers (Peer0,Peer1), where Peer0 is an anchor Peer in each organization. ##
-	
-		4- Each peer has a CouchDB, that keeps track of the world state. 
+3- Each organization has two peers (Peer0,Peer1), where Peer0 is an anchor Peer in each organization. ##
 
-		5- Each Organization has its own Membership service provider.	
+4- Each peer has a CouchDB, that keeps track of the world state. 
+
+5- Each Organization has its own Membership service provider.	
 
 Please, notice that we are not dealing with MSP in this lab, but for a complete network overview we included it in our network.
 Please, also notice that the naming of "mailbox1", and "mailbox2" is completely arbitrary and can be replaced with any organization name depending on the use case.
