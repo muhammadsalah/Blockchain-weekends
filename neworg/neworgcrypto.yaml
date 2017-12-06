@@ -1,0 +1,7 @@
+PeerOrgs:
+  - Name: mailbox3
+    Domain: mailbox3.network.com
+    Template:
+      Count: 2
+    Users:
+      Count: 5
