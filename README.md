@@ -96,6 +96,10 @@ Fabric Binaries:
 
 • Configtxlator: this binary transforms the proto buffer block into a readable language, and allows us to manipulate the blocks in blockchain.
 
+From the scripts folder run the generate script in terminal 1:
+
+	./generate.sh
+
 
 ##							Running the environment														##
 Please notice that we are going to need 4 terminal windows in order to apply this Lab.
