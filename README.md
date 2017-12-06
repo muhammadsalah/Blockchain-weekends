@@ -31,8 +31,27 @@ Please navigate to the scripts folder, and run the “pull_fabric.sh” script.
 
 This script will make sure you have the correct version; and you can set the version inside the script variable.
 
+##							Case Scenario																##
+We are going to build a basic network that has the following components:
 
+		1- Two orderer services in the blockchain network. 
 
+		2- Two organizations namely "mailbox1", and "mailbox2". 
+
+		3- Each organization has two peers (Peer0,Peer1), where Peer0 is an anchor Peer in each organization. ##
+	
+		4- Each peer has a CouchDB, that keeps track of the world state. 
+
+		5- Each Organization has its own Membership service provider.	
+
+Please, notice that we are not dealing with MSP in this lab, but for a complete network overview we included it in our network.
+Please, also notice that the naming of "mailbox1", and "mailbox2" is completely arbitrary and can be replaced with any organization name depending on the use case.
+
+We will create a channel between these two organizations "mailbox1", and "mailbox2" and deploy a chaincode over this channel.
+We will be using a CLI development container, in order to achieve that target.
+
+Then, we will configure another network of one organization with 2 peers each are supported by CouchDB as well, and connect it to the current network, and connect it to the channel.
+In order to demonstrate the process of scalling dynamically in Hyperledger Fabric.
 
 ##							Set up the environment														##
 This part most of us might have done many times, through creating the crypto material, and generating the artifacts part.
