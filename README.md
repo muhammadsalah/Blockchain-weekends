@@ -18,7 +18,8 @@ Ivan Vankov,
 Nick Gaski,
 Jae Duk Seo,
 Joshua Rippon,
-Jeff Garratt.
+Jeff Garratt,
+Ahmed Sayed Hassan.
 
 ##							Source Code																	##
 Please clone the following repository in order to continue with the lab.
