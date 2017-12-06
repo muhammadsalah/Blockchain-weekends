@@ -50,7 +50,7 @@ Please, also notice that the naming of "mailbox1", and "mailbox2" is completely 
 We will create a channel between these two organizations "mailbox1", and "mailbox2" and deploy a chaincode over this channel.
 We will be using a CLI development container, in order to achieve that target.
 
-	<img src="https://github.com/muhammadsalah/Blockchain-weekends/pics/blkchnwknd1.jpg">
+<img src="https://github.com/muhammadsalah/Blockchain-weekends/pics/blkchnwknd1.jpg">
 
 Then, we will configure another network of one organization with 2 peers each are supported by CouchDB as well, and connect it to the current network, and connect it to the channel.
 In order to demonstrate the process of scalling dynamically in Hyperledger Fabric.
