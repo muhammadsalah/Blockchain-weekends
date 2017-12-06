@@ -406,6 +406,7 @@ Now we are ready to start writing our dockerfile yaml file, so we now create a n
 Now, we can up this docker file later, when we export the crypto material, and create the required transaction.
 
 Following the same path of generating the artifacts, we do the drill and we dump the material into the CLI shared space as well.
+On your 3rd terminal, run these commands.
 
 	FABRIC_CFG_PATH=$PWD
 
