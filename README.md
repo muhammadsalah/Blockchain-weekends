@@ -69,6 +69,16 @@ Please visit this page in order to get your binaries:
 	
 http://hyperledger-fabric.readthedocs.io/en/release/samples.html
 
+Fabric Binaries:
+
+• Cryptogen: this binary is responsible for creating the crypto-material, and they consume the crypto config file.
+
+• Configtxgen: this binary is responsible for creating transaction blocks.
+
+• Peer: this binary has the functionalities that are executed by a PEER, it can create/join channels, create/invoke chaincodes, etc.
+
+• Configtxlator: this binary transforms the proto buffer block into a readable language, and allows us to manipulate the blocks in blockchain.
+
 
 ##							Running the environment														##
 The “start_env.sh” script, is a simple script that simply kills all the running docker containers, and clears all docker networks that are not used; if you choose to use this script to initialize the environment; it will tail the logs in a text file “log.txt”.
