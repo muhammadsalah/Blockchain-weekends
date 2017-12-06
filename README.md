@@ -1,5 +1,9 @@
 ### Blockchain weekends is an event for enhancing IBM HyperLedger Fabric Blockchain framework skills.  ###
 ##                                                                                                      ##
+it is very advisable to read the Hyperledger Fabric documentation first, before starting with tutorial before hand.
+
+http://hyperledger-fabric.readthedocs.io
+
 ##                                                                                                      ##    
 ##  This repository contains an initial network setup to demonstrate Blockchain Fabric concepts on:     ##
 ##              1- Blockchain Network Design, for Organizations, and Peers.                             ##
@@ -61,6 +65,10 @@ There is not much to be walked through here on this stage, as it has been covere
 
 However, notice that your binaries “cryptogen”, and “configtxgen” should be accessible via your environment directly, in other words they have to be appended to the path.
 
+Please visit this page in order to get your binaries:
+	
+http://hyperledger-fabric.readthedocs.io/en/release/samples.html
+
 
 ##							Running the environment														##
 The “start_env.sh” script, is a simple script that simply kills all the running docker containers, and clears all docker networks that are not used; if you choose to use this script to initialize the environment; it will tail the logs in a text file “log.txt”.
@@ -91,19 +99,19 @@ What we are about to leverage is; our CLI container -which is a tool that is mea
 One binary, that we are very interested is: Peer
 The binary is configured through parametrization in environment variables, most of these variable are self explanatory by nature however, lets take a look at them.
 
-CORE_PEER_ADDRESS ===> Maps to the peer url.
+CORE_PEER_ADDRESS :: Maps to the peer url.
 
-CORE_PEER_LOCALMSPID=====> The MSPID used in signing, and identification.
+CORE_PEER_LOCALMSPID :: The MSPID used in signing, and identification.
 
-CORE_PEER_TLS_ENABLED====> Boolean for TLS. 
+CORE_PEER_TLS_ENABLED :: Boolean for TLS. 
 
-CORE_PEER_TLS_CERT_FILE=====> Maps for the TLS Certification File.
+CORE_PEER_TLS_CERT_FILE :: Maps for the TLS Certification File.
 
-CORE_PEER_TLS_KEY_FILE======> Maps for the private key used to sign transactions.
+CORE_PEER_TLS_KEY_FILE :: Maps for the private key used to sign transactions.
 
-CORE_PEER_TLS_ROOTCERT_FILE====> Root certificate for TLS.
+CORE_PEER_TLS_ROOTCERT_FILE :: Root certificate for TLS.
 
-CORE_PEER_MSPCONFIGPATH====> Configuration folder which contains standard folder structure that all the certs, and keys that allows dealing of this peer with the MSP.
+CORE_PEER_MSPCONFIGPATH :: Configuration folder which contains standard folder structure that all the certs, and keys that allows dealing of this peer with the MSP.
 
 Once, “peer” binary has access to all these stuff, you can create channels instantiate deploy chaincodes, and act on behalf of the peer; and we will leverage that later to add a third organization to our current network.
 However the CLI does those two operations on behalf of the two anchor peers, that has been configured previously in the generate of artifacts sections.
@@ -182,7 +190,7 @@ Then we can instantiate the chaincode once on any peer; sepecify our endorsement
 
 and we could invoke the chaincode
 
-	peer chaincode invoke -o orderer1.network.com:7050  --tls true --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/network.com/orderers/orderer1.network.com/msp/tlscacerts/tlsca.network.com-cert.pem  -C channel -n mycc -c '{"Args":["invoke","somekey"]}'
+	peer chaincode invoke -o orderer1.network.com:7050  --tls true --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/network.com/orderers/orderer1.network.com/msp/tlscacerts/tlsca.network.com-cert.pem  -C channel -n mycc -c '{"Args":["enroll","somekey"]}'
 
 
 and we can query our chaincode to see the reflection of our code
