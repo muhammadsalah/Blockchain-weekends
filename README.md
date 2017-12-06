@@ -38,7 +38,7 @@ We are going to build a basic network that has the following components:
 
 2- Two organizations namely "mailbox1", and "mailbox2". 
 
-3- Each organization has two peers (Peer0,Peer1), where Peer0 is an anchor Peer in each organization. ##
+3- Each organization has two peers (Peer0,Peer1), where Peer0 is an anchor Peer in each organization.
 
 4- Each peer has a CouchDB, that keeps track of the world state. 
 
