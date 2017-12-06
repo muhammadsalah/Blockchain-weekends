@@ -41,6 +41,16 @@ Hyperledger, leverages the visible identity, and access controlled records via t
 Channels, is the common maintaned ledger between two organizations or more. These channels are supported by Smart Contracts,
 which are programs that ensure the business logic is followed on top of this channel.
 
+We also may introduce some notions here.
+
+Organization :: is a subscribing entity to the network, such as companys.
+
+Peer :: is the supporting physical structure of the organization, and can be as many as we want.
+
+Orderer :: is a supporting service in the network that maintains the blocks in blockchain.
+
+MSP :: is a component that is responsible for authentication, and membership services.
+
 ##							Case Scenario																##
 We are going to build a basic network that has the following components:
 
