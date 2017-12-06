@@ -146,6 +146,7 @@ You will only need to dive into the container using the first command only.
 
 From terminal 2
 We dive into our CLI container
+	
 	docker exec -ti cli bash
 
 	peer channel join -b channel.block
