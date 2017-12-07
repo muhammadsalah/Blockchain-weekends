@@ -164,6 +164,8 @@ We dive into our CLI container
 	
 	docker exec -ti cli bash
 
+	peer channel create -o orderer1.network.com:7050 -c channel -f ./channel-artifacts/channel.tx --tls true --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/network.com/orderers/orderer1.network.com/msp/tlscacerts/tlsca.network.com-cert.pem	
+
 	peer channel join -b channel.block
 
 	peer channel update -o orderer1.network.com:7050 -c channel -f ./channel-artifacts/mailbox1MSPanchors.tx --tls true --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/network.com/orderers/orderer1.network.com/msp/tlscacerts/tlsca.network.com-cert.pem
