@@ -211,7 +211,7 @@ First we make sure that our identity is set to PEER 0 in Org mailbox 1
 
 Then we install the chaincode:
 
-	peer chaincode install -n mycc -v 1.0 -p github.com/chaincode/chaincode_example02/go
+	peer chaincode install -n mycc -v 1.0 -p github.com/chaincode/blockchainweekend/go
 
 and we do same thing for peer 0 in org Mailbox 2
 	
