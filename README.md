@@ -209,9 +209,11 @@ First we make sure that our identity is set to PEER 0 in Org mailbox 1
 
 	export CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox1.network.com/users/Admin@mailbox1.network.com/msp
 
-Then we install the chaincode:
+Then we install and instantiate the chaincode:
 
 	peer chaincode install -n mycc -v 1.0 -p github.com/chaincode/blockchainweekend/go
+	
+	peer chaincode instantiate -o orderer1.network.com:7050 --tls true --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/network.com/orderers/orderer1.network.com/msp/tlscacerts/tlsca.network.com-cert.pem -C channel -n mycc -v 1.0 -c '{"Args":["init"]}' -P "OR ('mailbox1MSP.member','mailbox2MSP.member')"
 
 and we do same thing for peer 0 in org Mailbox 2
 	
