@@ -108,17 +108,11 @@ The “start_env.sh” script, is a simple script that simply kills all the runn
 
 Please make sure you inspect the script, and ask a question whenever any command is not clear.
 Also, all scripts are plain simple for demonstration purposes so make sure you understand them clearly.
-Another, alternative is making sure the environment variable is set
-
-	COMPOSE_PROJECT_NAME=blockchainweeekends
-
+Another, alternative is making sure the environment variable is set COMPOSE_PROJECT_NAME=blockchainweeekends
 This can be achieved whether you can export that in the terminal
 	
 	export COMPOSE_PROJECT_NAME=blockchainweeekends
 
-or create a .env file with the sole attribute
-	
-	COMPOSE_PROJECT_NAME=blockchainweeekends
 
 Then run the command that consumes the “network.yaml” file via docker-compose.
 Docker-compose is a tool that consumes yaml configuration files, and start executing them in a manner to create ready made containers, a very common practice is you initialize your container parameterized in yaml configuration file, and each container is pointing to one, ore more shell scripts that start executing to make sure everything is up and running; which is the case with our CLI container, that sets up our environment pulling the channel transactions, and connecting the the anchor peers; to get ready to deploy our first chaincode through it; and opt for testing it out.
@@ -235,7 +229,7 @@ and we do same thing for peer 0 in org Mailbox 2
 
 	export CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/mailbox2.network.com/users/Admin@mailbox2.network.com/msp
 
-	peer chaincode install -n mycc -v 1.0 -p github.com/chaincode/chaincode_example02/go
+	peer chaincode install -n mycc -v 1.0 -p github.com/chaincode/blockchainweekend/go
 
 Then we can instantiate the chaincode once on any peer; sepecify our endorsement policy
 
@@ -248,7 +242,7 @@ and we could invoke the chaincode
 
 and we can query our chaincode to see the reflection of our code
 
-	peer chaincode query -C channel -n mycc -c '{"Args":["query","somekey"]}'
+	peer chaincode query -C channel -n mycc -c '{"Args":["get","somekey"]}'
 
 Please, notice that this sample chaincode just simply stores the invoking CA identity referenced to that key, and that's to demonstrate the GetCreator() function of the shim interface.
 
@@ -413,6 +407,8 @@ On your 3rd terminal, run these commands.
 	FABRIC_CFG_PATH=$PWD
 
 	configtxgen -printOrg mailbox3MSP > ../channel-artifacts/mailbox3MSP.json
+
+	cryptogen generate --config=./neworgcrypto.yaml --output="crypto-new"
 	
 	cp -r ../crypto-config/ordererOrganizations crypto-new
 
